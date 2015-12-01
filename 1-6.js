@@ -1,26 +1,31 @@
-/* Implement an algorithm to determine if a string has all unique characters.
+/* Implement a method to perform basic string compression using the counts of repeated characters. For example, aaabbcc becomes a3b2c2. If the compressed string is not shorter, the method should return the original string.
 
-My instinct here was to compare every item in the string to every other item, but this has O(n^2) complexity. If the string is ASCII, there would only be 128 character possibilities, so you could immediately return false if the string was longer than 128 characters, or as soon as any character was seen twice. Complexity here is either O(n) or arguably O(1), i.e., never more than 128.
+My instinct is to loop through the string with a count variable seeing if the character at i is equal to i + 1, pushing i if not, and incrementing the count if so
 
-code example here is further simplified to assume letters a-z only*/
+This actually is the simplest way to solve the problem, particularly in JavaScript with resizable arrays/strings.
+*/
 
-function isUnique(str) {
-  if (str.length > 26) {
-    return false;
-  }
+function stringCompress(str) {
 
-  var alphabet = {};
+  var compressed = '';
+  var repeatCount = 1;
 
   for (var i = 0; i < str.length; i++) {
-    if (alphabet[str[i]]) {
-      return false;
+    if (str[i] === str[i+1]) {
+      repeatCount++;
     } else {
-      alphabet[str[i]] = true;
+      compressed = compressed.concat(str[i], repeatCount);
+      repeatCount = 1;
     }
   }
-  return true;
+
+  if (compressed.length >= str.length) {
+    return str;
+  } else {
+    return compressed;
+  }
 }
 
-var str = 'abcdefghity';
+var str = 'aabbccc';
 
-console.log(isUnique(str));
+console.log(stringCompress(str));
